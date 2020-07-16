@@ -12,7 +12,7 @@
             :disabled="isEdit"
           )
           button(@click="addHandler" :disabled="isEdit")
-            | Add a lie
+            | Add lie
             Icon(icon="plus")
 
       .ui__relay
@@ -30,14 +30,14 @@
                     :checked="!!todo.isComplete"
                     @change="completeHandler($event, todo)"
                   )
-                  span
+                  .control__checkbox-handle
                     Icon(icon="check")
                   p {{ todo.task }}
                 .ui__toolbar
                   button.control(@click="removeHandler(todo['.key'])")
-                    Icon(icon="trash-alt")
+                    Icon(icon="trash-alt" title="Remove")
                   button.control(@click="editHandler(todo['.key'])")
-                    Icon(icon="edit")
+                    Icon(icon="edit" title="Edit")
 
 
             template(v-else)
@@ -45,9 +45,9 @@
                 input(type="text" v-model="todo.task" @keyup.enter="saveHandler(todo)")
                 .ui__toolbar
                   button.control(@click="saveHandler(todo)")
-                    Icon(icon="save")
+                    Icon(icon="save" title="Save")
                   button.control(@click="cancelHandler(todo['.key'])")
-                    Icon(icon="times-circle")
+                    Icon(icon="times-circle" title="Cancel")
 </template>
 
 <script>
@@ -60,13 +60,13 @@ export default {
     return {
       task: "",
       todosList: [], // initialise/declare vuefire binding
-      isEdit: false,
+      isEdit: false
     };
   },
 
   firebase: {
     // READ
-    todosList: dataTodos,
+    todosList: dataTodos
   },
 
   methods: {
@@ -105,8 +105,8 @@ export default {
       const key = todo[".key"];
       todo.isComplete = !!event.target.checked; //DEVNOTE: arguably this is unnecessary because of the feedback loop created by the firebase live update but for brevity it is included.
       dataTodos.child(key).update({ isComplete: !!event.target.checked });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -144,6 +144,11 @@ button {
   border: 2px solid black;
   color: #fff;
   cursor: pointer;
+
+  &:hover {
+    border-color: fuchsia;
+    background-color: fuchsia;
+  }
 
   &:focus {
     outline: 0 none;
@@ -217,6 +222,20 @@ input {
   align-items: center;
   margin: 12px 0;
 
+  &:hover {
+    p {
+      color: fuchsia;
+    }
+
+    .control__checkbox .control__checkbox-handle {
+      border-color: fuchsia;
+    }
+
+    .control__checkbox :checked ~ .control__checkbox-handle {
+      background-color: fuchsia;
+    }
+  }
+
   input[type="text"] {
     flex: 1;
     border-width: 0;
@@ -250,6 +269,10 @@ input {
       border: 0 none;
       display: block;
       height: 34px;
+
+      &:hover {
+        color: fuchsia;
+      }
     }
   }
 
@@ -274,7 +297,7 @@ input {
       visibility: hidden;
     }
 
-    span {
+    .control__checkbox-handle {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -288,7 +311,7 @@ input {
       }
     }
 
-    :checked ~ span {
+    :checked ~ .control__checkbox-handle {
       background-color: black;
 
       svg {
