@@ -9,7 +9,7 @@ const app = firebase.initializeApp({
   storageBucket: "pyrotechnics-2814c.appspot.com",
   messagingSenderId: "745526117546",
   appId: "1:745526117546:web:ce47211610b826f5a5fcd3",
-  measurementId: "G-KKE9QTQQQD"
+  measurementId: "G-KKE9QTQQQD",
 });
 
 export const db = app.database();
