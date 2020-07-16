@@ -54,83 +54,17 @@
 import { Component, Vue } from "vue-property-decorator";
 import { dataTodos } from "./firebase";
 
-interface State {
-  newTask: string;
-  isEdit: boolean;
-}
-
 interface Todo {
   ".key": string;
   task: string;
   isComplete: boolean;
 }
 
-/* Vue.extend()
- **********************/
-/*
-export default Vue.extend({
-  name: "app",
-
-  data() {
-    return {
-      newTask: "",
-      todosList: [], // initialise/declare vuefire binding
-      isEdit: false
-    };
-  },
-
-  firebase: {
-    // READ
-    todosList: dataTodos
-  },
-
-  methods: {
-    //CREATE
-    addHandler() {
-      dataTodos.push({ task: this.newTask, isEdit: false, isComplete: false });
-      this.newTask = "";
-    },
-
-    //DELETE
-    removeHandler(key: string) {
-      dataTodos.child(key).remove();
-    },
-
-    //UPDATE
-    editHandler(key: string) {
-      this.isEdit = true;
-      dataTodos.child(key).update({ isEdit: true });
-    },
-
-    saveHandler(todo: Todo) {
-      const key = todo[".key"];
-      this.isEdit = false;
-      dataTodos
-        .child(key)
-        .set({ task: todo.task, isEdit: false, isComplete: false });
-    },
-
-    cancelHandler(key: string) {
-      this.isEdit = false;
-      dataTodos.child(key).update({ isEdit: false });
-    },
-
-    completeHandler(event: any, todo: Todo) {
-      const key = todo[".key"];
-      todo.isComplete = !!event.target.checked; //DEVNOTE: arguably this is unnecessary because of the feedback loop created by the firebase live update but for brevity it is included.
-      dataTodos.child(key).update({ isComplete: !!event.target.checked });
-    }
-  }
-});
-*/
-
-/* Class-Style Component
- **********************/
 @Component({
   firebase: {
     // READ
-    todosList: dataTodos
-  }
+    todosList: dataTodos,
+  },
 })
 export default class App extends Vue {
   newTask: String = "";
@@ -173,63 +107,6 @@ export default class App extends Vue {
     dataTodos.child(key).update({ isComplete: !!event.target.checked });
   }
 }
-
-/* ES6
- **********************/
-/*export default {
-  name: "app",
-
-  data() {
-    return {
-      task: "",
-      todosList: [], // initialise/declare vuefire binding
-      isEdit: false
-    };
-  },
-
-  firebase: {
-    // READ
-    todosList: dataTodos
-  },
-
-  methods: {
-    //CREATE
-    addHandler() {
-      dataTodos.push({ task: this.task, isEdit: false, isComplete: false });
-      this.task = "";
-    },
-
-    //DELETE
-    removeHandler(key) {
-      dataTodos.child(key).remove();
-    },
-
-    //UPDATE
-    editHandler(key) {
-      this.isEdit = true;
-      dataTodos.child(key).update({ isEdit: true });
-    },
-
-    saveHandler(todo) {
-      const key = todo[".key"];
-      this.isEdit = false;
-      dataTodos
-        .child(key)
-        .set({ task: todo.task, isEdit: false, isComplete: false });
-    },
-
-    cancelHandler(key) {
-      this.isEdit = false;
-      dataTodos.child(key).update({ isEdit: false });
-    },
-
-    completeHandler(event, todo) {
-      const key = todo[".key"];
-      todo.isComplete = !!event.target.checked; //DEVNOTE: arguably this is unnecessary because of the feedback loop created by the firebase live update but for brevity it is included.
-      dataTodos.child(key).update({ isComplete: !!event.target.checked });
-    }
-  }
-};*/
 </script>
 
 <style lang="scss">
