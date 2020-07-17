@@ -1,62 +1,14 @@
-<template lang="pug">
-  #app
-    header.main__header
-        h1 Taskmaster
-    main.main__body
-      .ui__capture
-        .form__control-group
-          input(type="text"
-            v-model="newTask"
-            @keyup.enter="addHandler"
-            placeholder="What is your choosen procrastination today?"
-            :disabled="isEdit"
-          )
-          button(@click="addHandler" :disabled="isEdit")
-            | Add lie
-            Icon(icon="plus")
-
-      .ui__relay
-        ul.list__todo.list__unstyled(:class="[{'list__todo--edit': isEdit}]")
-          li.list__todo-item(v-for="todo in todosList" :key="todo['.key']")
-            template(v-if="!todo.isEdit")
-              .ui__todo
-                label.control.control__checkbox
-                  //-
-                    input(type="checkbox"
-                      v-model="todo.isComplete"
-                      @change="completeHandler($event, todo['.key'])"
-                    )
-                  input(type="checkbox"
-                    :checked="!!todo.isComplete"
-                    @change="completeHandler($event, todo)"
-                  )
-                  .control__checkbox-handle
-                    Icon(icon="check")
-                  p {{ todo.task }}
-                .ui__toolbar
-                  button.control(@click="removeHandler(todo['.key'])")
-                    Icon(icon="trash-alt" title="Remove")
-                  button.control(@click="editHandler(todo['.key'])")
-                    Icon(icon="edit" title="Edit")
-
-
-            template(v-else)
-              .ui__todo.ui__todo--edit
-                input(type="text" v-model="todo.task" @keyup.enter="saveHandler(todo)")
-                .ui__toolbar
-                  button.control(@click="saveHandler(todo)")
-                    Icon(icon="save" title="Save")
-                  button.control(@click="cancelHandler(todo['.key'])")
-                    Icon(icon="times-circle" title="Cancel")
-</template>
-
 <script lang="ts">
+/*By far the best migration documentation from the javascript ecosphere to the typescript ecosphere using vue as your mode of transport. well done that man! vue official docs are garbage on this subject.
+https://blog.logrocket.com/how-to-write-a-vue-js-app-completely-in-typescript/
+*/
 import { Component, Vue } from "vue-property-decorator";
 import { dataTodos } from "./firebase";
 
 interface Todo {
   ".key": string;
   task: string;
+  isEdit: boolean;
   isComplete: boolean;
 }
 
@@ -67,28 +19,28 @@ interface Todo {
   },
 })
 export default class App extends Vue {
-  newTask: String = "";
-  todosList = []; // initialise/declare vuefire binding
-  isEdit: Boolean = false;
+  private newTask: string = "";
+  private todosList = []; // initialise/declare vuefire binding
+  private isEdit: boolean = false;
 
   //CREATE
-  addHandler() {
+  private addHandler() {
     dataTodos.push({ task: this.newTask, isEdit: false, isComplete: false });
     this.newTask = "";
   }
 
   //DELETE
-  removeHandler(key: string) {
+  private removeHandler(key: string) {
     dataTodos.child(key).remove();
   }
 
   //UPDATE
-  editHandler(key: string) {
+  private editHandler(key: string) {
     this.isEdit = true;
     dataTodos.child(key).update({ isEdit: true });
   }
 
-  saveHandler(todo: Todo) {
+  private saveHandler(todo: Todo) {
     const key = todo[".key"];
     this.isEdit = false;
     dataTodos
@@ -96,15 +48,234 @@ export default class App extends Vue {
       .set({ task: todo.task, isEdit: false, isComplete: false });
   }
 
-  cancelHandler(key: string) {
+  private cancelHandler(key: string) {
     this.isEdit = false;
     dataTodos.child(key).update({ isEdit: false });
   }
 
-  completeHandler(event: any, todo: Todo) {
+  private completeHandler(event: any, todo: Todo) {
     const key = todo[".key"];
     todo.isComplete = !!event.target.checked; //DEVNOTE: arguably this is unnecessary because of the feedback loop created by the firebase live update but for brevity it is included.
     dataTodos.child(key).update({ isComplete: !!event.target.checked });
+  }
+
+  // Nice guide on render function: https://www.digitalocean.com/community/tutorials/vuejs-introduction-render-functions
+  render(h: any) {
+    return h(
+      "div",
+      {
+        attrs: {
+          id: "app",
+        },
+      },
+      [
+        h("header", { class: { "main-header": true } }, [
+          h("h1", "Taskmaster"),
+        ]),
+        h("main", { class: { main__body: true } }, [
+          h("div", { class: { ui__capture: true } }, [
+            h("div", { class: { "form__control-group": true } }, [
+              h("input", {
+                attrs: {
+                  type: "text",
+                  placeholder: "What is your chosen procrastination today?",
+                  disabled: this.isEdit,
+                },
+                domProps: {
+                  value: this.newTask,
+                },
+                on: {
+                  input: (event: any) => (this.newTask = event.target.value),
+                  keyup: (event: any) =>
+                    event.key === "Enter" ||
+                    event.which == 13 ||
+                    event.keyCode == 13
+                      ? this.addHandler()
+                      : null,
+                },
+              }),
+              h(
+                "button",
+                {
+                  attrs: {
+                    disabled: this.isEdit,
+                  },
+                  on: {
+                    click: this.addHandler,
+                  },
+                },
+                [
+                  "Add lie",
+                  h("Icon", {
+                    props: {
+                      icon: "plus",
+                    },
+                  }),
+                ]
+              ),
+            ]),
+          ]),
+          h("div", { class: { ui__relay: true } }, [
+            h(
+              "ul",
+              {
+                class: {
+                  list__unstyled: true,
+                  list__todo: true,
+                  "list__todo--edit": this.isEdit,
+                },
+              },
+              this.todosList.map((todo: Todo) =>
+                h(
+                  "li",
+                  {
+                    class: { "list__todo-item": true },
+                    attrs: { key: todo[".key"] },
+                  },
+                  !todo.isEdit
+                    ? [
+                        h("div", { class: { ui__todo: true } }, [
+                          h(
+                            "label",
+                            {
+                              class: { control: true, control__checkbox: true },
+                            },
+                            [
+                              h("input", {
+                                attrs: {
+                                  type: "checkbox",
+                                },
+                                domProps: {
+                                  checked: !!todo.isComplete,
+                                },
+                                on: {
+                                  change: (event: any) =>
+                                    this.completeHandler(event, todo),
+                                },
+                              }),
+                              h(
+                                "div",
+                                {
+                                  class: { "control__checkbox-handle": true },
+                                },
+                                [
+                                  h("Icon", {
+                                    props: {
+                                      icon: "check",
+                                    },
+                                  }),
+                                ]
+                              ),
+                              h("p", [todo.task]),
+                            ]
+                          ),
+                          h("div", { class: { ui__toolbar: true } }, [
+                            h(
+                              "button",
+                              {
+                                class: { control: true },
+                                on: {
+                                  click: () => this.removeHandler(todo[".key"]),
+                                },
+                              },
+                              [
+                                h("Icon", {
+                                  attrs: {
+                                    title: "Remove",
+                                  },
+                                  props: {
+                                    icon: "trash-alt",
+                                  },
+                                }),
+                              ]
+                            ),
+                            h(
+                              "button",
+                              {
+                                class: { control: true },
+                                on: {
+                                  click: () => this.editHandler(todo[".key"]),
+                                },
+                              },
+                              [
+                                h("Icon", {
+                                  attrs: {
+                                    title: "Edit",
+                                  },
+                                  props: {
+                                    icon: "edit",
+                                  },
+                                }),
+                              ]
+                            ),
+                          ]),
+                        ]),
+                      ]
+                    : [
+                        h(
+                          "div",
+                          { class: { ui__todo: true, "ui__todo--edit": true } },
+                          [
+                            h("input", {
+                              attrs: { type: "text" },
+                              on: {
+                                input: (event: any) =>
+                                  (todo.task = event.target.value),
+                                keyup: (event: any) =>
+                                  event.key === "Enter" ||
+                                  event.which == 13 ||
+                                  event.keyCode == 13
+                                    ? this.saveHandler(todo)
+                                    : null,
+                              },
+                              domProps: {
+                                value: todo.task,
+                              },
+                            }),
+                            h("div", { class: { ui__toolbar: true } }, [
+                              h(
+                                "button",
+                                {
+                                  class: { control: true },
+                                  on: {
+                                    click: () => this.saveHandler(todo),
+                                  },
+                                },
+                                [
+                                  h("Icon", {
+                                    props: { icon: "save", title: "Save" },
+                                  }),
+                                ]
+                              ),
+                              h(
+                                "button",
+                                {
+                                  class: { control: true },
+                                  on: {
+                                    click: () =>
+                                      this.cancelHandler(todo[".key"]),
+                                  },
+                                },
+                                [
+                                  h("Icon", {
+                                    props: {
+                                      icon: "times-circle",
+                                      title: "Cancel",
+                                    },
+                                  }),
+                                ]
+                              ),
+                            ]),
+                          ]
+                        ),
+                      ]
+                )
+              )
+            ),
+          ]),
+        ]),
+      ]
+    );
   }
 }
 </script>
