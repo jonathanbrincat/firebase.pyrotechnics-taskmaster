@@ -1,0 +1,209 @@
+html,
+body {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+h1,
+h2 {
+  font-weight: normal;
+}
+
+li {
+  margin: 0;
+}
+
+a {
+  color: #42b983;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: black;
+  border: 2px solid black;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    border-color: fuchsia;
+    background-color: fuchsia;
+  }
+
+  &:focus {
+    outline: 0 none;
+  }
+}
+
+input {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 0;
+  border: 2px solid black;
+
+  &:focus {
+    border-radius: 0;
+    outline: none;
+    border-color: fuchsia;
+  }
+}
+
+.list__unstyled {
+  list-style-type: none;
+  padding: 0;
+}
+
+.main__body {
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.ui__capture {
+  .form__control-group {
+    display: flex;
+
+    :disabled {
+      opacity: 0.25;
+    }
+  }
+
+  input[type="text"] {
+    border-right-width: 0;
+    padding: 9px 12px;
+    flex: 1;
+  }
+
+  button {
+    padding: 0 9px;
+  }
+
+  svg {
+    margin-left: 9px;
+  }
+}
+
+.ui__relay {
+}
+
+.list__todo {
+  &--edit {
+    .ui__todo {
+      opacity: 0.25;
+    }
+
+    .ui__todo--edit {
+      opacity: 1;
+    }
+  }
+}
+
+.ui__todo {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+
+  &:hover {
+    p {
+      color: fuchsia;
+    }
+
+    .control__checkbox .control__checkbox-handle {
+      border-color: fuchsia;
+    }
+
+    .control__checkbox :checked ~ .control__checkbox-handle {
+      background-color: fuchsia;
+    }
+  }
+
+  input[type="text"] {
+    flex: 1;
+    border-width: 0;
+    border-bottom-width: 2px;
+    min-height: 30px;
+
+    &:focus {
+      outline: 0 none;
+    }
+  }
+
+  :checked ~ p {
+    text-decoration: line-through;
+  }
+
+  .form__control-group {
+  }
+
+  $toolbar_gutter: 6px;
+  .ui__toolbar {
+    display: flex;
+    align-items: center;
+    margin: {
+      left: -$toolbar_gutter;
+      right: -$toolbar_gutter;
+    }
+
+    button {
+      background: transparent;
+      color: black;
+      border: 0 none;
+      display: block;
+      height: 34px;
+
+      &:hover {
+        color: fuchsia;
+      }
+    }
+  }
+
+  .control {
+    margin: 0 $toolbar_gutter;
+  }
+
+  .control__checkbox {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    cursor: pointer;
+
+    p {
+      flex: 1;
+      margin: 0;
+    }
+
+    input[type="checkbox"] {
+      position: absolute;
+      z-index: -1;
+      visibility: hidden;
+    }
+
+    .control__checkbox-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 2px solid black;
+      color: white;
+
+      svg {
+        display: none;
+      }
+    }
+
+    :checked ~ .control__checkbox-handle {
+      background-color: black;
+
+      svg {
+        display: block;
+      }
+    }
+  }
+}

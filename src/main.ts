@@ -1,7 +1,8 @@
 import "./firebase";
 
 import Vue from "vue";
-import App from "./App.vue";
+// import App from "./App.vue";
+import App from "./App";
 import { rtdbPlugin } from "vuefire";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
