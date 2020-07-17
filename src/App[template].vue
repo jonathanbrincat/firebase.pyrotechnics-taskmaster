@@ -205,9 +205,6 @@ input {
   }
 }
 
-.ui__relay {
-}
-
 .list__todo {
   &--edit {
     .ui__todo {
@@ -252,9 +249,6 @@ input {
 
   :checked ~ p {
     text-decoration: line-through;
-  }
-
-  .form__control-group {
   }
 
   $toolbar_gutter: 6px;

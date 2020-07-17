@@ -1,4 +1,5 @@
-<script lang="ts">
+<!-- DEVNOTE: you MUST declare the tsx extension when using typescript and jsx together so babel can know how to transpile it -->
+<script lang="tsx">
 /*By far the best migration documentation from the javascript ecosphere to the typescript ecosphere using vue as your mode of transport. well done that man! vue official docs are garbage on this subject.
 https://blog.logrocket.com/how-to-write-a-vue-js-app-completely-in-typescript/
 */
@@ -60,221 +61,105 @@ export default class App extends Vue {
   }
 
   // Nice guide on render function: https://www.digitalocean.com/community/tutorials/vuejs-introduction-render-functions
-  render(h: any) {
-    return h(
-      "div",
-      {
-        attrs: {
-          id: "app",
-        },
-      },
-      [
-        h("header", { class: { "main-header": true } }, [
-          h("h1", "Taskmaster"),
-        ]),
-        h("main", { class: { main__body: true } }, [
-          h("div", { class: { ui__capture: true } }, [
-            h("div", { class: { "form__control-group": true } }, [
-              h("input", {
-                attrs: {
-                  type: "text",
-                  placeholder: "What is your chosen procrastination today?",
-                  disabled: this.isEdit,
-                },
-                domProps: {
-                  value: this.newTask,
-                },
-                on: {
-                  input: (event: any) => (this.newTask = event.target.value),
-                  keyup: (event: any) =>
-                    event.key === "Enter" ||
-                    event.which == 13 ||
-                    event.keyCode == 13
-                      ? this.addHandler()
-                      : null,
-                },
-              }),
-              h(
-                "button",
-                {
-                  attrs: {
-                    disabled: this.isEdit,
-                  },
-                  on: {
-                    click: this.addHandler,
-                  },
-                },
-                [
-                  "Add lie",
-                  h("Icon", {
-                    props: {
-                      icon: "plus",
-                    },
-                  }),
-                ]
-              ),
-            ]),
-          ]),
-          h("div", { class: { ui__relay: true } }, [
-            h(
-              "ul",
-              {
-                class: {
-                  list__unstyled: true,
-                  list__todo: true,
-                  "list__todo--edit": this.isEdit,
-                },
-              },
-              this.todosList.map((todo: Todo) =>
-                h(
-                  "li",
-                  {
-                    class: { "list__todo-item": true },
-                    attrs: { key: todo[".key"] },
-                  },
-                  !todo.isEdit
-                    ? [
-                        h("div", { class: { ui__todo: true } }, [
-                          h(
-                            "label",
-                            {
-                              class: { control: true, control__checkbox: true },
-                            },
-                            [
-                              h("input", {
-                                attrs: {
-                                  type: "checkbox",
-                                },
-                                domProps: {
-                                  checked: !!todo.isComplete,
-                                },
-                                on: {
-                                  change: (event: any) =>
-                                    this.completeHandler(event, todo),
-                                },
-                              }),
-                              h(
-                                "div",
-                                {
-                                  class: { "control__checkbox-handle": true },
-                                },
-                                [
-                                  h("Icon", {
-                                    props: {
-                                      icon: "check",
-                                    },
-                                  }),
-                                ]
-                              ),
-                              h("p", [todo.task]),
-                            ]
-                          ),
-                          h("div", { class: { ui__toolbar: true } }, [
-                            h(
-                              "button",
-                              {
-                                class: { control: true },
-                                on: {
-                                  click: () => this.removeHandler(todo[".key"]),
-                                },
-                              },
-                              [
-                                h("Icon", {
-                                  attrs: {
-                                    title: "Remove",
-                                  },
-                                  props: {
-                                    icon: "trash-alt",
-                                  },
-                                }),
-                              ]
-                            ),
-                            h(
-                              "button",
-                              {
-                                class: { control: true },
-                                on: {
-                                  click: () => this.editHandler(todo[".key"]),
-                                },
-                              },
-                              [
-                                h("Icon", {
-                                  attrs: {
-                                    title: "Edit",
-                                  },
-                                  props: {
-                                    icon: "edit",
-                                  },
-                                }),
-                              ]
-                            ),
-                          ]),
-                        ]),
-                      ]
-                    : [
-                        h(
-                          "div",
-                          { class: { ui__todo: true, "ui__todo--edit": true } },
-                          [
-                            h("input", {
-                              attrs: { type: "text" },
-                              on: {
-                                input: (event: any) =>
-                                  (todo.task = event.target.value),
-                                keyup: (event: any) =>
-                                  event.key === "Enter" ||
-                                  event.which == 13 ||
-                                  event.keyCode == 13
-                                    ? this.saveHandler(todo)
-                                    : null,
-                              },
-                              domProps: {
-                                value: todo.task,
-                              },
-                            }),
-                            h("div", { class: { ui__toolbar: true } }, [
-                              h(
-                                "button",
-                                {
-                                  class: { control: true },
-                                  on: {
-                                    click: () => this.saveHandler(todo),
-                                  },
-                                },
-                                [
-                                  h("Icon", {
-                                    props: { icon: "save", title: "Save" },
-                                  }),
-                                ]
-                              ),
-                              h(
-                                "button",
-                                {
-                                  class: { control: true },
-                                  on: {
-                                    click: () =>
-                                      this.cancelHandler(todo[".key"]),
-                                  },
-                                },
-                                [
-                                  h("Icon", {
-                                    props: {
-                                      icon: "times-circle",
-                                      title: "Cancel",
-                                    },
-                                  }),
-                                ]
-                              ),
-                            ]),
-                          ]
-                        ),
-                      ]
-                )
-              )
-            ),
-          ]),
-        ]),
-      ]
+  render() {
+    return (
+      <div id="app">
+        <header class="main__header">
+          <h1>Taskmaster</h1>
+        </header>
+        <main class="main__body">
+          <div class="ui__capture">
+            <div class="form__control-group">
+              <input
+                type="text"
+                value={this.newTask}
+                onInput={(event: any) => (this.newTask = event.target.value)}
+                onKeyup={(event: any) => {
+                  event.key === "Enter" ||
+                  event.which == 13 ||
+                  event.keyCode == 13
+                    ? this.addHandler()
+                    : null;
+                }}
+                placeholder="What is your choosen procrastination today?"
+                disabled={this.isEdit}
+              />
+              <button onClick={this.addHandler} disabled={this.isEdit}>
+                Add lie
+                <Icon icon="plus" />
+              </button>
+            </div>
+          </div>
+          <div class="ui__relay">
+            <ul
+              class={[
+                "list__todo",
+                "list__unstyled",
+                { "list__todo--edit": this.isEdit },
+              ]}
+            >
+              {this.todosList.map((todo: Todo) => (
+                <li class="list__todo-item">
+                  {!todo.isEdit ? (
+                    <div class="ui__todo">
+                      <label class="control control__checkbox">
+                        <input
+                          type="checkbox"
+                          checked={!!todo.isComplete}
+                          onChange={(event: any) => {
+                            this.completeHandler(event, todo);
+                          }}
+                        />
+                        <div class="control__checkbox-handle">
+                          <Icon icon="check" />
+                        </div>
+                        <p>{todo.task}</p>
+                      </label>
+                      <div class="ui__toolbar">
+                        <button
+                          onClick={() => this.removeHandler(todo[".key"])}
+                        >
+                          <Icon icon="trash-alt" title="Remove" />
+                        </button>
+                        <button onClick={() => this.editHandler(todo[".key"])}>
+                          <Icon icon="edit" title="Edit" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="ui__todo ui__todo--edit">
+                      <input
+                        type="text"
+                        value={todo.task}
+                        onInput={(event: any) =>
+                          (todo.task = event.target.value)
+                        }
+                        onKeyup={(event: any) => {
+                          event.key === "Enter" ||
+                          event.which == 13 ||
+                          event.keyCode == 13
+                            ? this.saveHandler(todo)
+                            : null;
+                        }}
+                      />
+                      <div class="ui__toolbar">
+                        <button onClick={() => this.saveHandler(todo)}>
+                          <Icon icon="save" title="Save" />
+                        </button>
+                        <button
+                          onClick={() => this.cancelHandler(todo[".key"])}
+                        >
+                          <Icon icon="times-circle" title="Cancel" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </main>
+      </div>
     );
   }
 }
@@ -372,9 +257,6 @@ input {
   }
 }
 
-.ui__relay {
-}
-
 .list__todo {
   &--edit {
     .ui__todo {
@@ -419,9 +301,6 @@ input {
 
   :checked ~ p {
     text-decoration: line-through;
-  }
-
-  .form__control-group {
   }
 
   $toolbar_gutter: 6px;

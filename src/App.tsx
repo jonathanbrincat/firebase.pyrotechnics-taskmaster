@@ -3,6 +3,7 @@ import { dataTodos } from "./firebase";
 
 import "./app.scss";
 
+/*DEVNOTE: You must use the .tsx extension when consuming typescript and jsx together so babel knows*/
 interface Todo {
   ".key": string;
   task: string;
@@ -58,7 +59,6 @@ export default class App extends Vue {
     dataTodos.child(key).update({ isComplete: !!event.target.checked });
   }
 
-  // DEVNOTE: It seems you can not use typescript, jsx and the render function together in Vue single file components(.vue)! has to be a .tsx extension I guess for babel and the right loaders to transpile
   render(h: any) {
     return (
       <div id="app">
@@ -84,7 +84,7 @@ export default class App extends Vue {
               />
               <button onClick={this.addHandler} disabled={this.isEdit}>
                 Add lie
-                <Icon icon="plus"></Icon>
+                <Icon icon="plus" />
               </button>
             </div>
           </div>
