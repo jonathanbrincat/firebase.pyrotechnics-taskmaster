@@ -86,7 +86,7 @@ export default class App extends Vue {
               />
               <button onClick={this.addHandler} disabled={this.isEdit}>
                 Add lie
-                <Icon icon="plus" />
+                {/* <Icon icon="plus" /> */}
               </button>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default class App extends Vue {
                           }}
                         />
                         <div class="control__checkbox-handle">
-                          <Icon icon="check" />
+                          {/* <Icon icon="check" /> */}
                         </div>
                         <p>{todo.task}</p>
                       </label>
@@ -119,10 +119,10 @@ export default class App extends Vue {
                         <button
                           onClick={() => this.removeHandler(todo[".key"])}
                         >
-                          <Icon icon="trash-alt" title="Remove" />
+                          {/* <Icon icon="trash-alt" title="Remove" /> */}
                         </button>
                         <button onClick={() => this.editHandler(todo[".key"])}>
-                          <Icon icon="edit" title="Edit" />
+                          {/* <Icon icon="edit" title="Edit" /> */}
                         </button>
                       </div>
                     </div>
@@ -144,12 +144,12 @@ export default class App extends Vue {
                       />
                       <div class="ui__toolbar">
                         <button onClick={() => this.saveHandler(todo)}>
-                          <Icon icon="save" title="Save" />
+                          {/* <Icon icon="save" title="Save" /> */}
                         </button>
                         <button
                           onClick={() => this.cancelHandler(todo[".key"])}
                         >
-                          <Icon icon="times-circle" title="Cancel" />
+                          {/* <Icon icon="times-circle" title="Cancel" /> */}
                         </button>
                       </div>
                     </div>

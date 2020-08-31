@@ -17,6 +17,7 @@
     "vue": "2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.2",
+    "vue-styled-components": "^1.5.1",
     "vuefire": "2.2.3"
   },
   "devDependencies": {
